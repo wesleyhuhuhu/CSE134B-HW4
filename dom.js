@@ -6,6 +6,11 @@ function init() {
         walk();
     });
 
+    element = document.getElementById('advWalkBtn');
+    element.addEventListener('click', function () {
+        advWalk();
+    })
+
     element = document.getElementById('modifyBtn');
     element.addEventListener('click', function () {
         modify();
@@ -42,16 +47,130 @@ function walk() {
 
    el = el.querySelector('section > *');
    showNode(el);
+}
 
+function advWalk() {
+    let el;
+    el = document.documentElement.parentNode;
+    textArea = document.getElementById('nodeOutput');
+    //el = el.firstChild.firstChild;
+    let nodeType = el.nodeType;
+    let nodeName = el.nodeName;
+    let nodeValue = el.nodeValue;
+    let html = JSON.stringify(document.documentElement.outerHTML);
+    let array = html.split('');
+    textArea.innerHTML = array + '\r\n' + '\r\n';
+    let flag = false;
+    let enter = false;
+    for (let i = 0; i < array.length; i++) {
+        if (array[i] == '\\' && array[i+1] == 'n' && enter == false) {
+            textArea.innerHTML = textArea.innerHTML + '\r\n';
+            enter = true;
+        }
+        else if (array[i] == ' ' && array[i+1] == ' ' && array[i+2] == ' ' && array[i+3] == ' ') {
+            textArea.innerHTML = textArea.innerHTML + ' ';
+        }
+        else if (array[i] == '<' && array[i+1] == 'e' && array[i+2] == 'm') {
+            flag = true;
+            enter = false;
+            textArea.innerHTML = textArea.innerHTML + '\r\n' + '        ';
+        }
+        else if (array[i] == '<' && array[i+1] == 'h' && array[i+2] == 'e') {
+            flag = true;
+            enter = false;
+            textArea.innerHTML = textArea.innerHTML + '\r\n';
+        }
+        else if (array[i] == '<' && array[i+1] != '/' && array[i+1] != '!') {
+            flag = true;
+            enter = false;
+        }
+        else if (flag && array[i] == '>') {
+            flag = false;
+            textArea.innerHTML = textArea.innerHTML + array[i];
+        }
+        else if (flag && array[i] == ' ') {
+            flag = false;
+            textArea.innerHTML = textArea.innerHTML + '>';
+        }
+        if (flag) {
+            textArea.innerHTML = textArea.innerHTML + array[i];
+        }
+    }
+    //alert(JSON.stringify(document.body.outerHTML));
+    //traverseDOMTree(textArea, el, 1);
+    if (el && (nodeName != '#text')) {
+        //alert(`Node type: ${nodeType}\nNode name: ${nodeName}\nNode value: ${nodeValue}`)
+    }
+}
 
+function traverseDOMTree(targetDocument, currentElement, depth)
+{
+  if (currentElement)
+  {
+    var j;
+    var tagName=currentElement.tagName;
+    let nodeType = currentElement.nodeType;
+    let nodeName = currentElement.nodeName;
+    let nodeValue = currentElement.nodeValue;
+    let textArea = document.getElementById('nodeOutput');
+    // Prints the node tagName, such as <A>, <IMG>, etc
+    if (currentElement) {
+        let areaText = textArea.innerHTML;
+        areaText = areaText + `\nNode type: ${nodeType}\nNode name: ${nodeName}\nNode value: ${nodeValue}\n`;
+        textArea.innerHTML = areaText;
+    }
+    else {
+        let areaText = textArea.innerHTML;
+        areaText = areaText + `unknown element`;
+        textArea.innerHTML = areaText;
+    }
+    // Traverse the tree
+    var i=0;
+    var currentElementChild=currentElement.childNodes[i];
+    while (currentElementChild)
+    {
+      // Formatting code (indent the tree so it looks nice on the screen)
+      targetDocument.write("<BR>\n");
+      for (j=0; j<depth; j++)
+      {
+        // &#166 is just a vertical line
+        targetDocument.write("&nbsp;&nbsp;&#166");
+      }  							
+      targetDocument.writeln("<BR>");
+      for (j=0; j<depth; j++)
+      {
+        targetDocument.write("&nbsp;&nbsp;&#166");
+      }					
+      if (tagName)
+        targetDocument.write("--");
+
+      // Recursively traverse the tree structure of the child node
+      traverseDOMTree(targetDocument, currentElementChild, depth+1);
+      i++;
+      currentElementChild=currentElement.childNodes[i];
+    }
+    // The remaining code is mostly for formatting the tree
+    targetDocument.writeln("<BR>");
+    for (j=0; j<depth-1; j++)
+    {
+      targetDocument.write("&nbsp;&nbsp;&#166");
+    }			
+    targetDocument.writeln("&nbsp;&nbsp;");
+    if (tagName)
+      targetDocument.writeln("&lt;/"+tagName+"&gt;");
+  }
 }
 
 function showNode(el) {
     let nodeType = el.nodeType;
     let nodeName = el.nodeName;
     let nodeValue = el.nodeValue;
+    let textArea = document.getElementById('nodeOutput');
+    let areaText = textArea.innerHTML;
 
-    alert(`Node type: ${nodeType}\nNode name: ${nodeName}\nNode value: ${nodeValue}`);
+    areaText = areaText + `\nNode type: ${nodeType}\nNode name: ${nodeName}\nNode value: ${nodeValue}\n`;
+    textArea.innerHTML = areaText;
+    //alert(`Node type: ${nodeType}\nNode name: ${nodeName}\nNode value: ${nodeValue}`);
 }
 
 function modify() {
