@@ -52,6 +52,25 @@
                 animation-direction: alternate;
             }
 
+            .shmancy {
+                width: 100%;
+                overflow: hidden;
+                animation: slide-right 2s;
+            }
+
+            output {
+                display: grid;
+            }
+
+            @keyframes slide-right {
+                from {
+                    margin-left: 100%;
+                }
+                to {
+                    margin-left: 0%;
+                }
+            }
+
             @keyframes backgroundColorPalette {
                 0% {background: var(--color1);}
                 25% {background: #60d394;}
@@ -74,9 +93,9 @@
                 <label for="walkBtn">Basic Traversal</label>
                 <input type="button" id="walkBtn" value="Walk">
                 <label for="advWalkBtn">Advanced Walk</label>
-                <input type="button" id="advWalkBtn" value="Walk">
+                <input type="button" id="advWalkBtn" value="Advanced Walk">
                 <br><br>
-                <textarea id="nodeOutput" cols="25" rows="8">hi\nhi</textarea>
+                <textarea id="nodeOutput" cols="25" rows="8"></textarea>
                 <!--
                     Q1a) Modify the simple walk button example to not use alerts but instead to print out the node information on the page in a <textarea> within this fieldset. Using appropriate spacing or returns, so we can see each step
 
@@ -91,7 +110,8 @@
                 <legend>Modify</legend>
                 <label for="modifyBtn">Simple Modification</label>
                 <input type="button" id="modifyBtn" value="Modify">
-
+                <label for="advModifyBtn">Simple Modification</label>
+                <input type="button" id="advModifyBtn" value="Advanced Modify">
                 <!--
                     Q2) Add a new button "Advanced Modify" that does the following:
                     1.  Changes the text of the h1 to say "DOM Manipulation is Fun!"
@@ -104,17 +124,30 @@
                 <legend>Add</legend>
                 <label for="addBtn">Basic Addition</label>
                 <input type="button" id="addBtn" value="Add">
+                <br>
 
                 <!--
                     Q3) Add a select menu that allows you to add a new element to the DOM.  The select menu should have the following options: Text Node, Comment, and Element. When you select one of these options and click the button, the appropriate element should be added to the DOM.  You may want to define an output tag to put the newly created elements in it and style it in a fashion with a border or background color, so you can tell it is new content.  You will need a corresponding text field to define the contents of the text node, comment text, or tag name you want to insert.  By default set the text of any added element to say "New Element" or "New Comment" or "New Text Node" depending on the type of element you are adding but add in the current date and time using a JS Date object.  You can use the toLocaleString() method to get a nicely formatted date and time string.
 
                 -->
+                <label for="addition">Select an element:</label>
+                <select name="addition" id="addition">
+                    <option value="text">Text Node</option>
+                    <option value="comment">Comment</option>
+                    <option value="element">Element</option>
+                </select><br>
+                <label for="textField">Basic Addition</label>
+                <input type="text" id="textField">
+                <input type="button" id="addEl" value="Create Element">
+                <br>
             </fieldset>
 
             <fieldset>
                 <legend>Remove</legend>
                 <label for="removeBtn">Simple Delete</label>
                 <input type="button" id="removeBtn" value="Remove">
+                <label for="safeRemoveBtn">Simple Delete</label>
+                <input type="button" id="safeRemoveBtn" value="Safe Remove">
                 <!--
 
                 Q4a) Safe Delete
@@ -142,6 +175,10 @@
 <h2>Look out below these will get deleted if you press the buttons above!</h2>
 <p>I am scared of being deleted!</p>
 <p>Me too. Oh noes, here comes the <code>removeChild()</code> method, it's going to delete us!</p>
+<p>Red: Text Node, Green: Comment, Blue: Element</p>
+                <output id="output">
+
+                </output>
 
 <!-- put all your new code in this dom.js file -->
 <script src="dom.js"></script>

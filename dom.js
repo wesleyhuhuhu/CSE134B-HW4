@@ -16,15 +16,41 @@ function init() {
         modify();
     });
 
+    element = document.getElementById('advModifyBtn');
+    element.addEventListener('click', function () {
+        advModify();
+    });
+
     element = document.getElementById('addBtn');
     element.addEventListener('click', function () {
         add();
+    });
+
+    element = document.getElementById('addEl');
+    element.addEventListener('click', function () {
+        addEl();
     });
 
     element = document.getElementById('removeBtn');
     element.addEventListener('click', function () {
         remove();
     });
+
+    element = document.getElementById('safeRemoveBtn');
+    element.addEventListener('click', function () {
+        safeDelete();
+    });
+}
+
+function advModify() {
+    h1Tag = document.querySelector('h1');
+    h1Tag.innerHTML = 'DOM Manipulation is Fun!';
+    let num = Math.floor(Math.random() * 6);
+    const colors = ["black", "darkslategray", "darkgreen", "darkgoldenrod", "darkred", "darkmagenta"];
+    h1Tag.style.color = colors[num];
+    p1Tag = document.getElementById('p1');
+    p1Tag.classList.remove('fancy');
+    p1Tag.classList.add('shmancy');
 }
 
 function walk() {
@@ -59,7 +85,7 @@ function advWalk() {
     let nodeValue = el.nodeValue;
     let html = JSON.stringify(document.documentElement.outerHTML);
     let array = html.split('');
-    textArea.innerHTML = array + '\r\n' + '\r\n';
+    //textArea.innerHTML = array + '\r\n' + '\r\n';
     let flag = false;
     let enter = false;
     for (let i = 0; i < array.length; i++) {
@@ -188,6 +214,7 @@ function modify() {
     // be careful doing many styles bit by bit it isn't efficent, might be easier just to set a class
 
     // you can also update the class list
+    el.classList.remove('shmancy');
     el.classList.add('fancy');
 
     // you can also update the dataset which change data-* attributes
@@ -220,6 +247,51 @@ function add() {
     // let oldP = document.getElementById('p1');
     // oldP.insertAdjacentHTML('afterend', '<p>This is a<em>test</em> of the DOM</p>');
     // clearly short hands are pretty easy!
+}
+
+function addEl() {
+
+    let select = document.getElementById('addition');
+    let value = select.value;
+    const date = new Date();
+    let outputArea = document.getElementById('output');
+    let text = document.getElementById('textField').value;
+    if (text == '') {}
+    if (value == 'text') {
+        if (text == '') {text = 'New Text Node';}
+        let span = document.createElement('span');
+        let textNode = document.createTextNode(text);
+        span.appendChild(textNode);
+        span.innerHTML = span.innerHTML + "|" + date;
+        outputArea.appendChild(span);
+        span.style.border = '1px solid red';
+    }
+    else if (value == 'comment') {
+        if (text == '') {text = 'New Comment';}
+        let span = document.createElement('span');
+        let comment = `<!--${text}-->`;
+        span = document.createElement('span');
+        span.innerHTML = comment + date;
+        outputArea.appendChild(span);
+        span.style.border = '1px solid green';
+    }
+    else {
+        if (text == '') {text = 'New Element';}
+        let element = document.createElement(value);
+        element.innerHTML = element.innerHTML + text + '|' + date;
+        outputArea.appendChild(element);
+        element.style.border = '1px solid blue'
+    }
+    console.log(text);
+}
+
+function safeDelete() {
+    while (document.body.lastChild.tagName != 'SECTION') {
+        document.body.removeChild(document.body.lastChild);
+    }
+    while (document.body.firstChild.tagName != 'SECTION') {
+        document.body.removeChild(document.body.firstChild);
+    }
 }
 
 function remove() {
