@@ -40,6 +40,23 @@ function init() {
     element.addEventListener('click', function () {
         safeDelete();
     });
+
+    element = document.getElementById('selectorRemoveBtn');
+    element.addEventListener('click', function () {
+        var root = document.documentElement;
+        var tag = document.getElementById('selector').value;
+        selectorDelete(root, tag);
+    });
+
+    element = document.getElementById('basicCloneBtn');
+    element.addEventListener('click', function () {
+        basicClone();
+    });
+
+    element = document.getElementById('advCloneBtn');
+    element.addEventListener('click', function () {
+        advClone();
+    });
 }
 
 function advModify() {
@@ -250,7 +267,6 @@ function add() {
 }
 
 function addEl() {
-
     let select = document.getElementById('addition');
     let value = select.value;
     const date = new Date();
@@ -294,8 +310,55 @@ function safeDelete() {
     }
 }
 
+function selectorDelete(root, tag) {
+    if (root == null) {
+        return null;
+    }
+    else if (root.tagName == tag.toUpperCase()) {
+        root.remove();
+        console.log(tag.toUpperCase());
+    }
+    let childArray = root.childNodes;
+    for (let i = 0; i < childArray.length; i++) {
+        selectorDelete(childArray[i], tag);
+    }
+    return null;
+}
+
 function remove() {
   document.body.removeChild(document.body.lastChild);
+}
+
+function basicClone() {
+    let oldP1 = document.getElementById('p1');
+    let clone = oldP1.cloneNode(true);
+    let outputArea = document.getElementById('output');
+    outputArea.appendChild(clone);
+}
+
+function advClone() {
+    let num = document.querySelectorAll('#card');
+    num = num.length % 4;
+    let temp = document.getElementsByTagName("template");
+    let template = temp[temp.length-1];
+    let card = template.content.cloneNode(true);
+
+    let titles = ["UC San Diego", "UCLA", "UC Berkeley", "UC Irvine"];
+    let boilerPlate = ["UC San Diego is the best school ever.", "UCLA is overrated and crowded.", "UC Berkeley is better than UCLA.", "UCI is irrelevant."];
+    let links = ["https://ucsd.edu/", "https://www.ucla.edu/", "https://www.berkeley.edu/", "https://uci.edu/"];
+    let title = card.firstChild.nextSibling.firstChild.nextSibling;
+    title.innerHTML = titles[num];
+    let pic = title.nextSibling.nextSibling.firstChild.nextSibling;
+    pic.src = `${titles[num]}.jpg`;
+    let p = title.nextSibling.nextSibling.nextSibling.nextSibling;
+    p.innerHTML = boilerPlate[num];
+    console.log(p.nextSibling.nextSibling);
+    let link = p.nextSibling.nextSibling;
+    link.innerHTML = `${titles[num]} website`;
+    link.href = links[num];
+    link.target = '_blank';
+    let outputArea = document.getElementById('output');
+    outputArea.appendChild(card);
 }
 
 window.addEventListener('DOMContentLoaded', init);
